@@ -1,32 +1,32 @@
-﻿const cpfInput = document.getElementById('CPF');
+const cpfInput = document.getElementById('CPF');
+
 cpfInput.addEventListener('blur', function (e) {
     const inputValue = e.target.value.replace(/\D/g, '');
     if (!validarCPF(inputValue)) {
         cpfInput.style.color = 'red';
     }
     else {
-        cpfInput.style.color = 'black';
         document.getElementById('CPF').value = (cpfInput.value.replace(/^(\d{3})\D*(\d{3})\D*(\d{3})\D*(\d{2})$/g, '$1.$2.$3-$4'));
     }
 });
 
 $(document).ready(function () {
-    $('#formCadastro').submit(function (e) {
+    if (obj) {
+        $('#formCadastroBeneficiario #Nome').val(obj.Nome);
+        $('#formCadastroBeneficiario #CPF').val(obj.CPF);
+        $('#formCadastroBeneficiario #IdCliente').val(obj.IdCliente);
+    }
+
+    $('#formCadastroBeneficiario').submit(function (e) {
         e.preventDefault();
+
         $.ajax({
             url: urlPost,
             method: "POST",
             data: {
                 "NOME": $(this).find("#Nome").val(),
-                "CEP": $(this).find("#CEP").val(),
-                "Email": $(this).find("#Email").val(),
-                "Sobrenome": $(this).find("#Sobrenome").val(),
-                "Nacionalidade": $(this).find("#Nacionalidade").val(),
-                "Estado": $(this).find("#Estado").val(),
-                "Cidade": $(this).find("#Cidade").val(),
-                "Logradouro": $(this).find("#Logradouro").val(),
-                "Telefone": $(this).find("#Telefone").val(),
-                "CPF": $(this).find("#CPF").val()
+                "CEP": $(this).find("#CPF").val(),
+                "Email": $(this).find("#IdCliente").val()
             },
             error:
                 function (r) {
@@ -38,31 +38,11 @@ $(document).ready(function () {
             success:
                 function (r) {
                     ModalDialog("Sucesso!", r)
-                    $("#formCadastro")[0].reset();
+                    $("#formCadastroBeneficiario")[0].reset();
+                    window.location.href = urlRetorno;
                 }
         });
     })
-
-    $('#btnBenef').click(function () {
-       $.ajax({
-       
-           url: '/BeneficiarioController/Forms', 
-           type: 'POST',
-           success: function (data) {
-               console.log(data);
-               $('#modalContent').html(data); // Carrega o conteúdo da resposta na modal
-               $('#formCadastroBeneficiario').modal('show'); // Exibe a modal
-           },
-           error: function () {
-               alert('Erro ao carregar a página.');
-       
-           }
-       });
-
-        var cpf = cpfInput.value.replace('.', '').replace('.', '').replace('-', '');
-        console.log(cpf);
-
-    });
 
 })
 
@@ -72,7 +52,7 @@ function ModalDialog(titulo, texto) {
         '        <div class="modal-dialog">                                                                                 ' +
         '            <div class="modal-content">                                                                            ' +
         '                <div class="modal-header">                                                                         ' +
-        '                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>         ' +
+        '                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>         ' +
         '                    <h4 class="modal-title">' + titulo + '</h4>                                                    ' +
         '                </div>                                                                                             ' +
         '                <div class="modal-body">                                                                           ' +
@@ -88,20 +68,4 @@ function ModalDialog(titulo, texto) {
 
     $('body').append(texto);
     $('#' + random).modal('show');
-}
-
-function validarCPF(cpf) {
-    cpf = cpf.replace(/\D/g, '');
-    if (cpf.toString().length != 11 || /^(\d)\1{10}$/.test(cpf)) return false;
-    var result = true;
-    [9, 10].forEach(function (j) {
-        var soma = 0, r;
-        cpf.split(/(?=)/).splice(0, j).forEach(function (e, i) {
-            soma += parseInt(e) * ((j + 2) - (i + 1));
-        });
-        r = soma % 11;
-        r = (r < 2) ? 0 : 11 - r;
-        if (r != cpf.substring(j, j + 1)) result = false;
-    });
-    return result;
 }

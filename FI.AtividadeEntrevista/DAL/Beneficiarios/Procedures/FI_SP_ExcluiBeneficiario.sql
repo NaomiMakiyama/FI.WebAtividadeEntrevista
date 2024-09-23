@@ -1,0 +1,6 @@
+CREATE PROC FI_SP_ExcluiBeneficiario
+	@Id bigint
+AS
+BEGIN
+	DELETE FROM BENEFICIARIOS WHERE Id = @Id
+END

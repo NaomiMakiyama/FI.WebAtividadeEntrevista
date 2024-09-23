@@ -1,4 +1,5 @@
-﻿const cpfInput = document.getElementById('CPF');
+const cpfInput = document.getElementById('CPF');
+
 cpfInput.addEventListener('blur', function (e) {
     const inputValue = e.target.value.replace(/\D/g, '');
     if (!validarCPF(inputValue)) {
@@ -11,22 +12,15 @@ cpfInput.addEventListener('blur', function (e) {
 });
 
 $(document).ready(function () {
-    $('#formCadastro').submit(function (e) {
+    $('#formCadastroBeneficiario').submit(function (e) {
         e.preventDefault();
         $.ajax({
             url: urlPost,
             method: "POST",
             data: {
                 "NOME": $(this).find("#Nome").val(),
-                "CEP": $(this).find("#CEP").val(),
-                "Email": $(this).find("#Email").val(),
-                "Sobrenome": $(this).find("#Sobrenome").val(),
-                "Nacionalidade": $(this).find("#Nacionalidade").val(),
-                "Estado": $(this).find("#Estado").val(),
-                "Cidade": $(this).find("#Cidade").val(),
-                "Logradouro": $(this).find("#Logradouro").val(),
-                "Telefone": $(this).find("#Telefone").val(),
-                "CPF": $(this).find("#CPF").val()
+                "CPF": $(this).find("#CPF").val(),
+                "IdCliente": $(this).find("#IdCliente").val()
             },
             error:
                 function (r) {
@@ -38,31 +32,10 @@ $(document).ready(function () {
             success:
                 function (r) {
                     ModalDialog("Sucesso!", r)
-                    $("#formCadastro")[0].reset();
+                    $("#formCadastroBeneficiario")[0].reset();
                 }
         });
     })
-
-    $('#btnBenef').click(function () {
-       $.ajax({
-       
-           url: '/BeneficiarioController/Forms', 
-           type: 'POST',
-           success: function (data) {
-               console.log(data);
-               $('#modalContent').html(data); // Carrega o conteúdo da resposta na modal
-               $('#formCadastroBeneficiario').modal('show'); // Exibe a modal
-           },
-           error: function () {
-               alert('Erro ao carregar a página.');
-       
-           }
-       });
-
-        var cpf = cpfInput.value.replace('.', '').replace('.', '').replace('-', '');
-        console.log(cpf);
-
-    });
 
 })
 
@@ -72,7 +45,7 @@ function ModalDialog(titulo, texto) {
         '        <div class="modal-dialog">                                                                                 ' +
         '            <div class="modal-content">                                                                            ' +
         '                <div class="modal-header">                                                                         ' +
-        '                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>         ' +
+        '                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>         ' +
         '                    <h4 class="modal-title">' + titulo + '</h4>                                                    ' +
         '                </div>                                                                                             ' +
         '                <div class="modal-body">                                                                           ' +
